@@ -22,6 +22,7 @@ const AdminOrders = () => {
   const getOrders = async () => {
     try {
       const { data } = await axios.get(`${process.env.REACT_APP_API}/api/v1/auth/all-orders`);
+      console.log(data);
       setOrders(data);
     } catch (error) {
       console.log(error);
@@ -73,8 +74,8 @@ const AdminOrders = () => {
                           onChange={(value) => handleChange(o._id, value)}
                           defaultValue={o?.status}
                         >
-                          {status.map((s, i) => (
-                            <Option key={i} value={s}>
+                          {status.map((s, index) => (
+                            <Option key={index} value={s}>
                               {s}
                             </Option>
                           ))}
@@ -92,7 +93,7 @@ const AdminOrders = () => {
                     <div className="row mb-2 p-3 card flex-row" key={p._id}>
                       <div className="col-md-4">
                         <img
-                          src={`/api/v1/product/product-photo/${p._id}`}
+                          src={p.photo}
                           className="card-img-top"
                           alt={p.name}
                           width="100px"

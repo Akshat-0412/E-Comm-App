@@ -17,6 +17,9 @@ const CreateProduct = () => {
   const [quantity, setQuantity] = useState("");
   const [shipping, setShipping] = useState("");
   const [photo, setPhoto] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+
+  console.log(photo);
 
   //get all category
   const getAllCategory = async () => {
@@ -28,6 +31,23 @@ const CreateProduct = () => {
     } catch (error) {
       console.log(error);
       toast.error("Something wwent wrong in getting catgeory");
+    }
+  };
+
+  const handlePhotoChange = (e) => {
+    const selectedPhoto = e.target.files[0];
+
+    if (selectedPhoto) {
+      setPhoto(selectedPhoto);
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImagePreview(event.target.result);
+      };
+      reader.readAsDataURL(selectedPhoto);
+    } else {
+      setPhoto(null);
+      setImagePreview(null);
     }
   };
 
@@ -46,15 +66,16 @@ const CreateProduct = () => {
       productData.append("quantity", quantity);
       productData.append("photo", photo);
       productData.append("category", category);
-      const { data } = axios.post(
+      const { data } = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/product/create-product`,
         productData
       );
       if (data?.success) {
-        toast.error(data?.message);
-      } else {
-        toast.success("Product Created Successfully");
+        toast.success(data?.message);
         navigate("/dashboard/admin/products");
+      } else {
+        toast.error(data?.message);
+        
       }
     } catch (error) {
       console.log(error);
@@ -89,24 +110,24 @@ const CreateProduct = () => {
                 ))}
               </Select>
               <div className="mb-3">
-                <label className="btn btn-outline-secondary col-md-12">
-                  {photo ? photo.name : "Upload Photo"}
-                  <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={(e) => setPhoto(e.target.files[0])}
-                    hidden
-                  />
-                </label>
+              <label className="btn btn-outline-secondary col-md-12">
+                {photo ? photo.name : 'Upload Photo'}
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                  hidden
+                />
+              </label>
               </div>
               <div className="mb-3">
-                {photo && (
+                {imagePreview && (
                   <div className="text-center">
                     <img
-                      src={URL.createObjectURL(photo)}
+                      src={imagePreview}
                       alt="product_photo"
-                      height={"200px"}
+                      height="200px"
                       className="img img-responsive"
                     />
                   </div>

@@ -144,7 +144,7 @@ const UpdateProduct = () => {
                 {photo ? (
                   <div className="text-center">
                     <img
-                      src={URL.createObjectURL(photo)}
+                      src={photo}
                       alt="product_photo"
                       height={"200px"}
                       className="img img-responsive"
@@ -153,7 +153,7 @@ const UpdateProduct = () => {
                 ) : (
                   <div className="text-center">
                     <img
-                      src={`/api/v1/product/product-photo/${id}`}
+                      src={photo}
                       alt="product_photo"
                       height={"200px"}
                       className="img img-responsive"
